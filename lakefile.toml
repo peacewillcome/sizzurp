@@ -1,0 +1,10 @@
+name = "sizzurp"
+version = "0.1.0"
+defaultTargets = ["sizzurp"]
+
+[[lean_lib]]
+name = "Sizzurp"
+
+[[lean_exe]]
+name = "sizzurp"
+root = "Main"
