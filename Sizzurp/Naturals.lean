@@ -1,3 +1,5 @@
+import Sizzurp.Equality
+
 namespace sizzurp
 
 inductive Nat where
@@ -20,17 +22,65 @@ instance instOfNat {n : _root_.Nat} : OfNat Nat n where
     ofNat := _root_.Nat.rec 0 (fun _ n ↦ n++) n
 
 -- Axiom 2.3: 0 is not the sucessor of any natural number
-theorem succ_ne : n++ ≠ 0 :=
-    fun h => nomatch h
+theorem succ_ne : ¬(n++ ~ 0) :=
+    sorry
 
--- MISC 1
-theorem fe3 : 4 = 3++ :=
-    by rfl
+-- Successor congruence: ?
+theorem succ_con : ∀ {n m : Nat}, (n ~ m) → (n++ ~ m++) :=
+    eq_app
 
 -- Proposition 2.1.6: 4 is not equal to 0
 theorem four_ne_zero : 4 ≠ 0 :=
     fun h => nomatch h
 
 -- Axiom 2.4: if n++ = m++, then n = m
-theorem succ_eq_self_eq {h : n++ = m++} : n = m :=
-    succ.inj h
+theorem succ_eq_self_eq {h : n++ ~ m++} : n ~ m :=
+    sorry
+
+-- Axiom 2.5: if P(0) and if P(n) → P(n++), then ∀ n, P(n)
+theorem induction {P : Nat → Prop} (b : P 0) (i : ∀ n, P n → P (n++)) : ∀ n, P n :=
+    fun n =>
+        match n with
+            | 0 => b
+            | n++ => i n (induction b i n)
+
+-- Recursion
+abbrev recursion (f : Nat → Nat → Nat) (c : Nat) : Nat → Nat :=
+    fun n =>
+        match n with
+            | 0 => c
+            | n++ => f n (recursion f c n)
+
+-- Proposition 2.1.16: index 0 ~ c
+theorem recursion_zero (f : Nat → Nat → Nat) {c} : recursion f c 0 ~ c :=
+    Eq.refl _
+
+-- Proposition 2.1.16: a_n++ ~ f_n(a_n)
+theorem recursion_succ (f : Nat → Nat → Nat) {c n} :
+    recursion f c (n++) ~ f n (recursion f c n) := Eq.refl _
+
+-- Proposition 2.1.16: definition is equal to code
+theorem eq_recursion (f : Nat → Nat → Nat) {c} (a : Nat → Nat) :
+    ((a 0 ~ c) ∧ ∀ n, a (n++) ~ f n (a n)) ↔ a ~ recursion f c :=
+        Iff.intro
+            (fun ⟨b, s⟩ =>
+                eq_funext (
+                    induction b (
+                        fun n ih =>
+                            eq_trans
+                                (s n)
+                                (eq_trans (eq_app ih) (recursion_succ f))
+                        )
+                    )
+            )
+            (fun rhs =>
+                sorry
+            )
+
+
+-- Addition
+
+
+-- Addition congruence left: ?
+theorem a_c_l : ∀ {a b c : Nat}, (b ~ c) → ((a+b) ~ (a+c)) :=
+    sorry
