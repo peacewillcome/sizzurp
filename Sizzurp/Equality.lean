@@ -22,7 +22,11 @@ theorem eq_sub : ∀ {P : α → Prop}, (a ~ b) → (P a) → (P b) :=
 theorem eq_app : ∀ {f : α → β}, (a ~ b) → ((f a) ~ (f b)) :=
     fun {f} h => match h with | Eq.refl _ => Eq.refl (f _)
 
--- Function extensionality: if ∀ a f(a) ~ g(a) → f ~ g
+-- Function extensionality: if ∀ a, f(a) ~ g(a) → f ~ g
 axiom eq_funext {f g : α → β} : (∀ a, f a ~ g a) → f ~ g
+
+-- Congruent Function?: if f ~ g, then f a ~ g a
+theorem eq_congrFun {f g : α → β} (h : f ~ g) (a : α) : f a ~ g a :=
+    match h with | Eq.refl _ => Eq.refl _
 
 end sizzurp
