@@ -111,8 +111,8 @@ theorem add_comm : ∀ {n m : Nat}, (n + m) ~ (m + n) :=
     sorry
 
 -- Lemma 2.2.2: ∀ n, n + 0 ~ n
-theorem add_zero : ∀ n, add n 0 ~ n :=
-    fun n => induction (b := Eq.refl (add 0 0))
+theorem add_zero (n : Nat) : add n 0 ~ n :=
+    recursion_zero
 
 -- Addition congruence left: ?
 theorem a_c_l : ∀ {a b c : Nat}, (b ~ c) → ((a+b) ~ (a+c)) :=
